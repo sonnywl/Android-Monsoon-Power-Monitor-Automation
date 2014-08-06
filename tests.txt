@@ -1,0 +1,7 @@
+TestName,TestDuration*1000(seconds),NumTests,TestSampleRate(s)
+gyroscope,75,5,Toggle,4
+gyroscope,75,5,NoToggle,4
+accelerometer,75,5,Toggle,4
+accelerometer,75,5,NoToggle,4
+gravity,75,5,Toggle,4
+gravity,75,5,NoToggle,4
