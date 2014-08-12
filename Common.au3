@@ -31,8 +31,9 @@ Func inData($checkData, $flagArray)
 		EndIf
 	Next
 	Return 0
-EndFunc   ;==>inData
+EndFunc
 
+; Check USB Bypass
 Func checkParameter($hWnd)
 	ControlClick($hWnd, "", "[NAME:buttonParameters]")
 	Sleep(1000)
@@ -42,9 +43,9 @@ Func checkParameter($hWnd)
 	Sleep(50)
 	ControlClick(WinActivate("Set Parameters"), "", "[NAME:buttonCancel]")
 	Sleep(50)
-EndFunc   ;==>checkParameter
+EndFunc
 
-
+; Monsoon Power Monitor Data Export
 Func saveData($hWnd, $description)
 	ControlClick($hWnd, "", "[NAME:buttonExport]")
 	Sleep(500)

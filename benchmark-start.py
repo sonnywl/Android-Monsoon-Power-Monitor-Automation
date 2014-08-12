@@ -29,7 +29,7 @@ def main(argv):
 	print "Connecting"
 	device = MonkeyRunner.waitForConnection(1)
 	print "Connected"
-	
+
 	unlock(device)
 	homePress(device)
 	startActivity(device, 'com.prac/com.prac.MainFragmentActivity')
