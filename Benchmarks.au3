@@ -9,24 +9,35 @@ Local $counter = 0
 Local $testsFile = FileOpen($INPUT_FILE, $FO_READ );
 Local $sFileRead = FileReadToArray($testsFile)
 
+Local $IS_LOGGING = false;
 Local $hWnd = activiatePowerTool()
+
 Func startBenchmark($msg)
-	MsgBox(0,"", "Start Benchmark " & $msg)
+
 	If Not FileExists($OUTPUT_FILE) Then
 		createFile($OUTPUT_FILE)
 	EndIf
 	; For Each Test
 	For $i = 1 To UBound($sFileRead) - 1 ; Loop through the tests
 		$test = StringSplit($sFileRead[$i], ",",$STR_NOCOUNT)
-		inData($test[$TOGGLE_INTERVAL], $TOGGLE_FLAGS)
+		If $IS_LOGGING Then
+			RunWait(".\benchmark-logger.bat RESET");
+		EndIf
 		; For Test Iteration
-		For $j = $TEST_INTERVALS To UBound($test) - 1
-			FileWriteLine($OUTPUT_FILE, $test[$TEST_NAME] & " " & $test[$j] & "ms")
 
+		For $j = $TEST_INTERVALS To UBound($test) - 1
+			FileWriteLine($OUTPUT_FILE, $test[$TEST_NAME] & " option " & $test[$j])
+			$counter = 0;
 			While $counter < $test[$NUM_TEST]
 				activiatePowerTool()
 				checkParameter($hWnd)
+
+				If $IS_LOGGING Then
+					RunWait(".\benchmark-logger.bat START")
+				EndIf
+
 				RunWait(".\benchmark-start.bat " _
+						& $test[$TEST_FILE_NAME_START] &" " _
 						& StringLower($test[$TEST_NAME]) & " " _
 						& $test[$j] & " " _
 						& inData($test[$TOGGLE_INTERVAL], $TOGGLE_FLAGS))
@@ -46,19 +57,29 @@ Func startBenchmark($msg)
 				$expectLife = ControlGetText($hWnd, "", "[NAME:labelBattery]")
 				$tCur = _Date_Time_GetLocalTime()
 
-				RunWait(".\benchmark-end.bat " & StringLower($test[$TEST_NAME]))
+				RunWait(".\benchmark-end.bat " _
+					& $test[$TEST_FILE_NAME_END] & " " _
+					& StringLower($test[$TEST_NAME]))
+
+				If $IS_LOGGING Then
+					RunWait(".\benchmark-logger.bat STOP")
+				EndIf
+
 				FileWriteLine($OUTPUT_FILE, _Date_Time_SystemTimeToDateTimeStr($tCur) _
 					& " " & $consumedEnergy & " " & $avgPower & " " _
 					& $expectLife & " " & $avgCurrent & " " & $avgVoltage)
 
-				$counter = $counter + 1
-
 				activiatePowerTool()
 				If $saveData Then
-					saveData($hWnd, $test[$TEST_NAME] & "-" & $test[$j] & "ms" )
+					saveData($hWnd, $test[$TEST_NAME] & "-" & $test[$j])
 				EndIf
+
+				$counter = $counter + 1
 			WEnd
-		$counter = 0;
 		Next
 	Next
+	If $IS_LOGGING Then
+		RunWait(".\benchmark-logger.bat SHUTDOWN");
+	EndIf
+	MsgBox(0, "", "Completed Benchmarks")
 EndFunc

@@ -2,6 +2,18 @@ DIR='/sys/devices/system/cpu/cpu'
 possible=$(adb shell "cat /sys/devices/system/cpu/possible"  | tr -d '\r')
 CPUS="${possible: -1}"
 
+
+reset() {
+	for i in $CPUS
+	do
+		min=$(adb shell "$DIR$i/cpufreq/cpuinfo_min_freq"  | tr -d '\r')
+		max=$(adb shell "$DIR$i/cpufreq/cpuinfo_max_freq"  | tr -d '\r')
+		adb shell "echo ondemand > $DIR$i/cpufreq/scaling_governor"
+		adb shell "echo $max > $DIR$i/cpufreq/scaling_max_freq"
+		adb shell "echo $min > $DIR$i/cpufreq/scaling_min_freq"
+	done
+}
+
 online() {
     for i in $CPUS
     do
@@ -13,7 +25,7 @@ online() {
 
 getFrequencies() {
     if [ "$#" -ne 1 ]; then
-        echo 'Get Frequency Requires a CPU core number' $#
+        echo 'Get Frequency Requires a CPU core number'
         return
     fi
     adb shell "cat $DIR$1/cpufreq/scaling_available_frequencies"| tr -d '\r'
@@ -21,7 +33,7 @@ getFrequencies() {
 
 getCurFrequency() {
     if [ "$#" -ne 1 ]; then
-        echo 'Get Frequency Requires a CPU core number' $#
+        echo 'Get Frequency Requires a CPU core number' 
         return
     fi
     adb shell "cat $DIR$1/cpufreq/scaling_cur_freq"| tr -d '\r'
@@ -29,7 +41,7 @@ getCurFrequency() {
 
 getMaxFrequency() {
     if [ "$#" -ne 1 ]; then
-        echo 'Get Frequency Requires a CPU core number' $#
+        echo 'Get Frequency Requires a CPU core number' 
         return
     fi
     adb shell "cat $DIR$1/cpufreq/scaling_max_freq"| tr -d '\r'
@@ -37,7 +49,7 @@ getMaxFrequency() {
 
 getMinFrequency() {
     if [ "$#" -ne 1 ]; then
-        echo 'Get Frequency Requires a CPU core number' $#
+        echo 'Get Frequency Requires a CPU core number' 
         return
     fi
     adb shell "cat $DIR$1/cpufreq/scaling_min_freq"| tr -d '\r'
@@ -45,7 +57,7 @@ getMinFrequency() {
 
 getPolicy() {
     if [ "$#" -ne 1 ]; then
-        echo 'Get Policy Requires a CPU core number' $#
+        echo 'Get Policy Requires a CPU core number' 
         return
     fi
     adb shell "cat $DIR$1/cpufreq/scaling_governor"
@@ -86,7 +98,7 @@ setPolicy() {
 }
 
 case ${1} in
-	0|cpus) echo $CPUS;;
+    0|cpus) echo $CPUS;;
     1|online) online $2;;
     2|freqs) getFrequencies $2;;
     3|cur) getCurFrequency $2;;
@@ -94,9 +106,10 @@ case ${1} in
     5|min) getMinFrequency $2;;
     6|getp) getPolicy $2;;
     7|setf) setFrequency $2 $3;;
-	8|setmax) setMaxFrequency $2 $3;;
-	9|setmin) setMinFrequency $2 $3;;
+    8|setmax) setMaxFrequency $2 $3;;
+    9|setmin) setMinFrequency $2 $3;;
     10|setp) setPolicy $2 $3;;
+	11|reset) reset;;
     -h|--help) 
 
 printf "\tcpus - get avaiable cpus

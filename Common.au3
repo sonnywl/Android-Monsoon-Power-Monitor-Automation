@@ -1,14 +1,17 @@
 Local Const $OUTPUT_FILE = "values.txt"
 Local Const $INPUT_FILE = "tests.txt"
-Local Const $TEST_NAME = 0; Test Name
-Local Const $TEST_TIME = 1; Test Time in Seconds
-Local Const $NUM_TEST = 2; Test Iterations
-Local Const $TOGGLE_INTERVAL = 3 ; Interval Toggling
-Local Const $TEST_INTERVALS = 4;
-; Other Tests are intervals
+Local Const $TEST_FILE_NAME_START = 0; Test File ###.py
+Local Const $TEST_FILE_NAME_END = 1; Test File ###.py
+Local Const $TEST_NAME = 2; Test Name
+Local Const $TEST_TIME = 3; Test Time in Seconds
+Local Const $NUM_TEST = 4; Test Iterations
+Local Const $TOGGLE_INTERVAL = 5 ; Interval Toggling
 
+Local Const $TEST_INTERVALS = 6; Tests Starts at this line
 Local Const $TOGGLE_FLAGS[2] = ["1", "toggle"]
+;benchmark-start.py,benchmark-end.py,gyroscope,10,1,Toggle,4
 
+; Other Tests are intervals
 Func activiatePowerTool()
 	Return WinActivate("Power Tool")
 EndFunc
@@ -20,7 +23,7 @@ Func createFile($sFilePath)
 					"File Create", "An error occurred whilst writing the temporary file.")
 		EndIf
 		FileWriteLine($sFilePath, _
-				"Test No, Time, Energy, Avg Power, Expected Battery, Avg Current, Avg Voltage")
+				"Time, Energy, Avg Power, Expected Battery, Avg Current, Avg Voltage")
 	EndIf
 EndFunc
 

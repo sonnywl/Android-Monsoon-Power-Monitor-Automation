@@ -36,12 +36,12 @@ def main(argv):
 
 	settings(device)
 	if intervalToggle:
-		touchLocation(device, 450, 670)
+		touchLocation(device, 450, 670) #Settings On Toggle
 	else:
-		touchLocation(device, 450, 770)
+		touchLocation(device, 450, 770) #Settings Off Toggle
 		
 	settings(device)
-	if interval == "1":
+	if interval == "1":	# Settings Option Selections
 		touchLocation(device, 450, 195)
 	elif interval == "2":
 		touchLocation(device, 450, 270)
@@ -52,10 +52,10 @@ def main(argv):
 	elif interval == "5":
 		touchLocation(device, 450, 570)
 		
-	if type=="accelerometer":
+	if type=="accelerometer":	# ListView Selections
 		touchLocation(device, 290, 475)
 	elif type=="gyroscope":
-		touchLocation(device, 290, 620)
+		touchLocation(device, 290, 600)
 	elif type=="gps":
 		touchLocation(device, 290, 740)
 	elif type=="barometer":
@@ -65,7 +65,7 @@ def main(argv):
 	elif type=="gravity":
 		touchLocation(device, 290, 1140)
 	
-	device.shell("input keyevent KEYCODE_POWER")    # turn screen off (or on?)
+	device.shell("input keyevent KEYCODE_POWER")    # turn screen off 
 	print time.time() - startTime, " seconds"
 	
 	

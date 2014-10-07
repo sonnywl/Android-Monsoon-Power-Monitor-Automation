@@ -1,2 +1,2 @@
-TestName,TestDuration*1000(seconds),NumTests,TestSampleRate(s)
-gyroscope,10,1,Toggle,4
+TestFileName.py, TestName, TestDuration*1000(seconds), NumTests, Toggle?, Settings Options
+benchmark-start.py,benchmark-end.py,gyroscope,10,2,Toggle,4
